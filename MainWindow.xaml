@@ -1,0 +1,560 @@
+﻿<Window x:Class="Rover.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Rover | Youtube Downloader" Height="650" Width="1100" MinHeight="550" MinWidth="800"
+        ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
+        Background="#1a1a1a"
+        Loaded="MainWindow_Loaded">
+
+    <Window.Resources>
+        <!-- Dark Theme Colors -->
+        <SolidColorBrush x:Key="DarkBackground" Color="#1a1a1a"/>
+        <SolidColorBrush x:Key="CardBackground" Color="#2d2d2d"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#404040"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#ffffff"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#b0b0b0"/>
+        <SolidColorBrush x:Key="TextMuted" Color="#808080"/>
+        <SolidColorBrush x:Key="AccentBlue" Color="#0d7377"/>
+        <SolidColorBrush x:Key="AccentBlueHover" Color="#14a085"/>
+        <SolidColorBrush x:Key="AccentGreen" Color="#2ecc71"/>
+        <SolidColorBrush x:Key="AccentGreenHover" Color="#27ae60"/>
+        <SolidColorBrush x:Key="AccentRed" Color="#e74c3c"/>
+        <SolidColorBrush x:Key="AccentRedHover" Color="#c0392b"/>
+        <SolidColorBrush x:Key="InputBackground" Color="#3a3a3a"/>
+        <SolidColorBrush x:Key="LogBackground" Color="#252525"/>
+
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource AccentBlue}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="8" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource AccentBlueHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0a5d61"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#404040"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Success Button Style -->
+        <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="{StaticResource AccentGreen}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="8" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource AccentGreenHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#229954"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#404040"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Danger Button Style -->
+        <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="{StaticResource AccentRed}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="8" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource AccentRedHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#a93226"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#404040"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern Card Style -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackground}"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20"/>  <!-- Reduced from 24 -->
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#000000" Opacity="0.2" BlurRadius="15" ShadowDepth="3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+<Style x:Key="ModernTextBox" TargetType="TextBox">
+    <Setter Property="Background" Value="{StaticResource InputBackground}"/>
+    <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+    <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+    <Setter Property="BorderThickness" Value="2"/>
+    <Setter Property="Padding" Value="12,0"/>  <!-- Changed from 12,8 to 12,0 -->
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="Height" Value="40"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>  <!-- Added this property -->
+    <Setter Property="CaretBrush" Value="{StaticResource TextPrimary}"/>
+    <Setter Property="SelectionBrush" Value="{StaticResource AccentBlue}"/>
+    <Setter Property="SelectionTextBrush" Value="{StaticResource TextPrimary}"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="TextBox">
+                <Border x:Name="border"
+                        Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}" 
+                        CornerRadius="8">
+                    <Grid>
+                        <!-- Placeholder text -->
+                        <TextBlock x:Name="PlaceholderText"
+                                  Text="{TemplateBinding Tag}"
+                                  Foreground="{StaticResource TextMuted}"
+                                  FontSize="{TemplateBinding FontSize}"
+                                  Margin="{TemplateBinding Padding}"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  IsHitTestVisible="False"
+                                  Visibility="Collapsed"/>
+                        
+                        <!-- Actual TextBox content -->
+                        <ScrollViewer x:Name="PART_ContentHost" 
+                                      Margin="{TemplateBinding Padding}"
+                                      VerticalAlignment="Center"
+                                      VerticalContentAlignment="Center"
+                                      Background="Transparent"
+                                      Focusable="False"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden"/>
+                    </Grid>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <!-- Show placeholder when empty and not focused -->
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="Text" Value=""/>
+                            <Condition Property="IsFocused" Value="False"/>
+                        </MultiTrigger.Conditions>
+                        <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
+                    </MultiTrigger>
+                    
+                    <Trigger Property="IsFocused" Value="True">
+                        <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource AccentBlue}"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource AccentBlue}"/>
+                    </Trigger>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter TargetName="border" Property="Background" Value="#2a2a2a"/>
+                        <Setter Property="Foreground" Value="{StaticResource TextMuted}"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+        <!-- Modern RadioButton Style -->
+        <Style x:Key="ModernRadioButton" TargetType="RadioButton">
+            <Setter Property="Margin" Value="0,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="RadioOuter" 
+                                    Grid.Column="0"
+                                    Width="20" Height="20" 
+                                    CornerRadius="10" 
+                                    BorderBrush="{StaticResource BorderBrush}" 
+                                    BorderThickness="2" 
+                                    Background="Transparent"
+                                    Margin="0,0,10,0">
+                                <Border x:Name="RadioInner" 
+                                        Width="8" Height="8" 
+                                        CornerRadius="4" 
+                                        Background="{StaticResource AccentBlue}"
+                                        Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Grid.Column="1" 
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding Content}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="RadioInner" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="RadioOuter" Property="BorderBrush" Value="{StaticResource AccentBlue}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RadioOuter" Property="BorderBrush" Value="{StaticResource AccentBlue}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Quality Selection RadioButton Style -->
+        <Style x:Key="QualityRadioButton" TargetType="RadioButton">
+            <Setter Property="Margin" Value="0,4"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="RadioOuter" 
+                                    Grid.Column="0"
+                                    Width="16" Height="16" 
+                                    CornerRadius="8" 
+                                    BorderBrush="{StaticResource BorderBrush}" 
+                                    BorderThickness="2" 
+                                    Background="Transparent"
+                                    Margin="0,0,8,0">
+                                <Border x:Name="RadioInner" 
+                                        Width="6" Height="6" 
+                                        CornerRadius="3" 
+                                        Background="{StaticResource AccentBlue}"
+                                        Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Grid.Column="1" 
+                                              VerticalAlignment="Center"
+                                              Content="{TemplateBinding Content}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="RadioInner" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="RadioOuter" Property="BorderBrush" Value="{StaticResource AccentBlue}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="RadioOuter" Property="BorderBrush" Value="{StaticResource AccentBlue}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern ProgressBar Style -->
+        <Style x:Key="ModernProgressBar" TargetType="ProgressBar">
+            <Setter Property="Height" Value="8"/>
+            <Setter Property="Background" Value="{StaticResource InputBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource AccentBlue}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="4"
+                                BorderThickness="0">
+                            <Rectangle x:Name="PART_Track" 
+                                       Fill="{TemplateBinding Foreground}"
+                                       RadiusX="4" RadiusY="4"
+                                       HorizontalAlignment="Left"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="24"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Panel - Settings -->
+            <ScrollViewer Grid.Column="0" 
+                          VerticalScrollBarVisibility="Auto" 
+                          HorizontalScrollBarVisibility="Disabled"
+                          Padding="0,0,4,0">
+                <StackPanel>
+                    <!-- YouTube URL Input -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="🔗 YouTube URL" FontSize="18" FontWeight="Medium" 
+                                       Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
+                            <TextBox x:Name="UrlTextBox" 
+                                     Style="{StaticResource ModernTextBox}" 
+                                     Tag="https://www.youtube.com/watch?v=..."
+                                     TextChanged="UrlTextBox_TextChanged"/>
+                            
+                            <!-- Video Preview Info -->
+                            <Border x:Name="VideoPreviewBorder"
+                                    Background="{StaticResource LogBackground}" 
+                                    CornerRadius="8" 
+                                    Padding="16" 
+                                    Margin="0,16,0,0"
+                                    Visibility="Collapsed">
+                                <StackPanel>
+                                    <TextBlock x:Name="VideoTitleTextBlock" 
+                                               Text="" 
+                                               FontSize="14" FontWeight="Medium"
+                                               Foreground="{StaticResource TextPrimary}" 
+                                               TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                    <TextBlock x:Name="VideoInfoTextBlock" 
+                                               Text="" 
+                                               FontFamily="Consolas" FontSize="12" 
+                                               Foreground="{StaticResource TextSecondary}" 
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Download Path -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="📁 Download Location" FontSize="16" FontWeight="Medium" 
+                                       Foreground="{StaticResource TextPrimary}" Margin="0,0,0,12"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="OutputPathTextBox" Grid.Column="0" 
+                                         Style="{StaticResource ModernTextBox}" 
+                                         IsReadOnly="True" 
+                                         Text="./Downloads"
+                                         Tag="Download path"/>
+                                <Button x:Name="BrowseButton" Grid.Column="2" 
+                                        Style="{StaticResource ModernButton}" 
+                                        Content="Browse" 
+                                        Click="BrowseButton_Click"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Format Settings -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,20">
+                        <StackPanel>
+                            <TextBlock Text="🎵 Format" FontSize="16" FontWeight="Medium" 
+                                       Foreground="{StaticResource TextPrimary}" Margin="0,0,0,12"/>
+                            <RadioButton x:Name="VideoRadio" Style="{StaticResource ModernRadioButton}" 
+                                         Content="Video (MP4)" IsChecked="True" 
+                                         Checked="FormatRadio_Checked"/>
+                            <RadioButton x:Name="AudioRadio" Style="{StaticResource ModernRadioButton}" 
+                                         Content="Audio Only (M4A)"
+                                         Checked="FormatRadio_Checked"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Quality Settings -->
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Text="⚙️ Quality Settings" FontSize="16" FontWeight="Medium" 
+                                       Foreground="{StaticResource TextPrimary}" Margin="0,0,0,12"/>
+                            
+                            <!-- Video Quality Panel -->
+                            <StackPanel x:Name="VideoQualityPanel">
+                                <TextBlock Text="Video Quality" FontSize="14" FontWeight="Medium" 
+                                           Foreground="{StaticResource TextSecondary}" Margin="0,0,0,8"/>
+                                <RadioButton x:Name="VideoQuality480" Style="{StaticResource QualityRadioButton}" 
+                                             Content="480p (SD)" Tag="SD480" GroupName="VideoQuality"
+                                             Checked="VideoQualityRadio_Checked"/>
+                                <RadioButton x:Name="VideoQuality720" Style="{StaticResource QualityRadioButton}" 
+                                             Content="720p (HD)" Tag="HD720" GroupName="VideoQuality" IsChecked="True"
+                                             Checked="VideoQualityRadio_Checked"/>
+                                <RadioButton x:Name="VideoQuality1080" Style="{StaticResource QualityRadioButton}" 
+                                             Content="1080p (FHD)" Tag="HD1080" GroupName="VideoQuality"
+                                             Checked="VideoQualityRadio_Checked"/>
+                                <RadioButton x:Name="VideoQuality1440" Style="{StaticResource QualityRadioButton}" 
+                                             Content="1440p (QHD)" Tag="UHD1440" GroupName="VideoQuality"
+                                             Checked="VideoQualityRadio_Checked"/>
+                                <RadioButton x:Name="VideoQuality2160" Style="{StaticResource QualityRadioButton}" 
+                                             Content="2160p (4K)" Tag="UHD2160" GroupName="VideoQuality"
+                                             Checked="VideoQualityRadio_Checked"/>
+
+                                <Separator Background="{StaticResource BorderBrush}" Margin="0,12,0,8"/>
+                            </StackPanel>
+                            
+                            <!-- Audio Quality Panel -->
+                            <StackPanel>
+                                <TextBlock Text="Audio Quality" FontSize="14" FontWeight="Medium" 
+                                           Foreground="{StaticResource TextSecondary}" Margin="0,0,0,8"/>
+                                <RadioButton x:Name="AudioQuality128" Style="{StaticResource QualityRadioButton}" 
+                                             Content="128 kbps" Tag="Low" GroupName="AudioQuality"
+                                             Checked="AudioQualityRadio_Checked"/>
+                                <RadioButton x:Name="AudioQuality192" Style="{StaticResource QualityRadioButton}" 
+                                             Content="192 kbps" Tag="Medium" GroupName="AudioQuality" IsChecked="True"
+                                             Checked="AudioQualityRadio_Checked"/>
+                                <RadioButton x:Name="AudioQuality256" Style="{StaticResource QualityRadioButton}" 
+                                             Content="256 kbps" Tag="High" GroupName="AudioQuality"
+                                             Checked="AudioQualityRadio_Checked"/>
+                                <RadioButton x:Name="AudioQuality320" Style="{StaticResource QualityRadioButton}" 
+                                             Content="320 kbps" Tag="VeryHigh" GroupName="AudioQuality"
+                                             Checked="AudioQualityRadio_Checked"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Right Panel - Progress & Logs -->
+            <Border Grid.Column="2" Style="{StaticResource Card}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="📊 Download Progress" FontSize="18" FontWeight="Medium" 
+                               Foreground="{StaticResource TextPrimary}" Margin="0,0,0,16"/>
+                    
+                    <!-- Progress Section -->
+                    <StackPanel Grid.Row="1" Margin="0,0,0,16">
+                        <ProgressBar x:Name="ProgressBar" 
+                                     Style="{StaticResource ModernProgressBar}" 
+                                     Value="0" Maximum="100" 
+                                     Margin="0,0,0,12"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="ProgressTextBlock" Grid.Column="0"
+                                       Text="Ready to download" 
+                                       FontSize="14" FontWeight="Medium"
+                                       Foreground="{StaticResource TextPrimary}"/>
+                            <TextBlock x:Name="ProgressPercentageTextBlock" Grid.Column="1"
+                                       Text="" 
+                                       FontSize="14" FontWeight="Bold"
+                                       Foreground="{StaticResource AccentBlue}"/>
+                        </Grid>
+                        
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="SpeedTextBlock" Grid.Column="0"
+                                       Text="" FontSize="12"
+                                       Foreground="{StaticResource TextSecondary}"/>
+                            <TextBlock x:Name="ETATextBlock" Grid.Column="1"
+                                       Text="" FontSize="12" TextAlignment="Right"
+                                       Foreground="{StaticResource TextSecondary}"/>
+                        </Grid>
+                    </StackPanel>
+                    
+                    <!-- Logs -->
+                    <ScrollViewer x:Name="LogScrollViewer" Grid.Row="2" 
+                                  VerticalScrollBarVisibility="Auto" 
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  Background="{StaticResource LogBackground}" 
+                                  Padding="16">
+                        <TextBlock x:Name="LogTextBlock" 
+                                   FontFamily="Consolas" FontSize="12" 
+                                   TextWrapping="Wrap" 
+                                   Foreground="{StaticResource TextSecondary}"
+                                   Text="Ready. Enter a YouTube URL to begin."/>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Bottom Panel -->
+        <Grid Grid.Row="1" Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Status -->
+            <Border Grid.Column="0" 
+                    Background="{StaticResource CardBackground}" 
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8" 
+                    Padding="20,12">
+                <TextBlock x:Name="StatusTextBlock" Text="Ready" FontSize="14" 
+                           Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center"/>
+            </Border>
+            
+            <!-- Cancel Button -->
+            <Button x:Name="CancelButton" Grid.Column="2" 
+                    Style="{StaticResource DangerButton}" 
+                    Content="CANCEL" 
+                    FontSize="14" FontWeight="Bold"
+                    Padding="20,16"
+                    Click="CancelButton_Click" 
+                    IsEnabled="False"/>
+            
+            <!-- Download Button -->
+            <Button x:Name="DownloadButton" Grid.Column="4" 
+                    Style="{StaticResource SuccessButton}" 
+                    Content="DOWNLOAD" 
+                    FontSize="16" FontWeight="Bold"
+                    Padding="40,16"
+                    Click="DownloadButton_Click" 
+                    IsEnabled="False"/>
+        </Grid>
+    </Grid>
+</Window>
