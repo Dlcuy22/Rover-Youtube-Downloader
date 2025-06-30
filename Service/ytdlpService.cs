@@ -62,7 +62,10 @@ namespace Rover.Service
         /// <summary>
         /// Directory where downloaded files will be saved. Defaults to user's Downloads folder
         /// </summary>
-        public string OutputPath { get; set; } = "%USERPROFILE%/Downloads";
+        public string OutputPath { get; set; } = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            "Downloads");
+        
         
         /// <summary>
         /// Custom filename (without extension). If null, uses video title

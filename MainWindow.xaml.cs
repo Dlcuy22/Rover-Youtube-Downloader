@@ -749,7 +749,7 @@ namespace Rover
                 {
                     // Fallback to default video folder
                     _downloadOptions.OutputPath = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), "Downloads");
+                        Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), "RoverDownloads");
                     OutputPathTextBox.Text = _downloadOptions.OutputPath;
                     
                     if (!Directory.Exists(_downloadOptions.OutputPath))

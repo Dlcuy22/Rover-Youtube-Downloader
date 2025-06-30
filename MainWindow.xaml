@@ -378,7 +378,7 @@
                                 <TextBox x:Name="OutputPathTextBox" Grid.Column="0" 
                                          Style="{StaticResource ModernTextBox}" 
                                          IsReadOnly="True" 
-                                         Text="./Downloads"
+                                         Text="Select Download Folder"
                                          Tag="Download path"/>
                                 <Button x:Name="BrowseButton" Grid.Column="2" 
                                         Style="{StaticResource ModernButton}" 
