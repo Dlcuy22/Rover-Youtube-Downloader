@@ -240,7 +240,7 @@ namespace Rover.Service
             args += $" -o \"{outputTemplate}\"";
 
             // Add ffmpeg location
-            args += " --ffmpeg-location \"./bin\"";
+            args += " --ffmpeg-location \"./python\"";
 
             // Configure format-specific download parameters
             switch (options.Format)

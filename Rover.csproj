@@ -20,6 +20,9 @@
         <None Update="python\yt-dlp.exe">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+         <None Update="python\copy ffmpeg binaries if theres nothing here">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>
