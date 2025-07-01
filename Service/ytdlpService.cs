@@ -239,6 +239,9 @@ namespace Rover.Service
             
             args += $" -o \"{outputTemplate}\"";
 
+            // Add ffmpeg location
+            args += " --ffmpeg-location \"./bin\"";
+
             // Configure format-specific download parameters
             switch (options.Format)
             {
@@ -263,6 +266,7 @@ namespace Rover.Service
             args += " --progress";            // Show download progress
             args += " --newline";             // Better progress output formatting
             args += " --console-title";       // Update console title with progress
+           
 
             return args;
         }
